@@ -1,3 +1,10 @@
+# Repo specific ignores
+venv*
+data/
+wandb/
+personal*
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

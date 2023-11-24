@@ -1,0 +1,33 @@
+do_wandb : False
+do_cli : True
+n_iterations : 10
+
+
+
+algorithms:
+  R1:
+    K_number_of_clusters : 3
+
+  R2:
+    K_number_of_clusters : 3
+
+
+
+datasets:
+  dummy: {}
+    
+  iris: {}
+
+  mnist : {}
+
+  cifar10 : {}
+
+  cifar100 : {}
+
+  fashion_mnist : {}
+
+
+
+metrics:
+  distortion: {}
+
