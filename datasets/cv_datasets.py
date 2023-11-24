@@ -29,16 +29,17 @@ class Cifar10Dataset(BaseDataset):
     def __init__(self, config : dict):
         super().__init__(config)
         print("Loading CIFAR-10 dataset...")
-        self.dataset = fetch_openml('CIFAR_10', cache=True)
+        self.x_data = np.load('data/cifar10_x.npy', allow_pickle=True)
+        self.y_data = np.load('data/cifar10_y.npy', allow_pickle=True)
         print("CIFAR-10 dataset loaded.")
-        print(f"Data shape : {self.dataset.data.shape}")
-        print(f"Target shape : {self.dataset.target.shape}")
+        print(f"Data shape : {self.x_data.shape}")
+        print(f"Target shape : {self.y_data.shape}")
             
     def get_x_data(self):
-        return self.dataset.data
+        return self.x_data
     
     def get_labels(self):
-        return self.dataset.target
+        return self.y_data
     
     
 
