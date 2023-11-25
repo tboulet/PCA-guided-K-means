@@ -26,6 +26,13 @@ datasets:
 
   fashion_mnist : {}
 
+  att : {}
+
+  ba :
+    keep_alphabets : True
+    keep_digits : False
+
+  coil: {}
 
 
 metrics:
