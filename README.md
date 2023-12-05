@@ -47,7 +47,11 @@ We intend to reuse these datasets, but also add more datasets to the benchmark.
 
 Datasets currently available in the code are the following:
 - `iris` : The Iris dataset
-- `mnist` : The MNIST dataset
+- `att` : The AT&T Face dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_att.py`` (from the root directory of this repo). This will download the dataset and save it in ``data/`` as an .npy file.
+- `mnist` : The MNIST dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_mnist.py``.
+- `ba` : The Binary Alphabet dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_binary_alphabet.py``.
+- `coil` : The Coil20 dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_coil20.py``.
+- `cifar10` : The CIFAR10 dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_cifar10.py``.
 
 TODO (Timothe) : add more datasets.
 
