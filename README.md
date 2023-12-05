@@ -45,9 +45,11 @@ The datasets used in the paper are the following:
 
 We intend to reuse these datasets, but also add more datasets to the benchmark.
 
+For downloading the datasets, you can run the following command, you will need to run the corresponding script in the `load_datasets_scripts` folder, as specified below.
+
 Datasets currently available in the code are the following:
 - `iris` : The Iris dataset
-- `att` : The AT&T Face dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_att.py`` (from the root directory of this repo). This will download the dataset and save it in ``data/`` as an .npy file.
+- `att` : The AT&T Face dataset. To load the dataset, you will need to first download it in Kaggle at https://www.kaggle.com/datasets/kasikrit/att-database-of-faces and place the s1-s40 folders in `./data/at&t_data` and then run ``load_datasets_scripts\load_att.py`` (from the root directory of this repo). This will download the dataset and save it in ``data/`` as an .npy file.
 - `mnist` : The MNIST dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_mnist.py``.
 - `ba` : The Binary Alphabet dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_binary_alphabet.py``.
 - `coil` : The Coil20 dataset. To load the dataset, you will need to run ``load_datasets_scripts\load_coil20.py``.
