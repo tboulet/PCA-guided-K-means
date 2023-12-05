@@ -5,6 +5,8 @@ import os
 # Function to download MNIST dataset and save it as a NumPy array
 def download_and_save_mnist():
     
+    print('Downloading MNIST dataset...')
+    
     # Load MNIST dataset using scikit-learn
     save_path = os.path.join('data', 'mnist_data.npy')
     os.makedirs(os.path.dirname(save_path), exist_ok=True)

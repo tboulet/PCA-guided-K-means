@@ -3,6 +3,7 @@ import numpy as np
 import imageio
 
 if __name__ == '__main__':
+    print("Loading the at&t dataset...")
     if not os.path.exists(os.path.join("data", "at&t_data")):
         raise FileNotFoundError("at&t dataset not found. Please download it in Kaggle at https://www.kaggle.com/datasets/kasikrit/att-database-of-faces and place the s1-s40 folders in data/at&t_data.")
     x_data = np.zeros((400, 92 * 112))

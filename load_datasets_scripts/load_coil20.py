@@ -55,7 +55,7 @@ def download(dataset_type='unprocessed'):
 
 
 def feed(dataset_type='unprocessed'):
-
+    print("Loading COIL-20 dataset...")
     data, label = download(dataset_type)
     
     path = os.path.join("data")
@@ -83,5 +83,7 @@ def feed(dataset_type='unprocessed'):
     # Save the data and the labels
     np.save(os.path.join(path, "coil20_x.npy"), data)
     np.save(os.path.join(path, "coil20_y.npy"), label)
-    
-feed(dataset_type='unprocessed')
+    print("COIL-20 dataset loaded.")
+
+if __name__ == "__main__":  
+	feed(dataset_type='unprocessed')

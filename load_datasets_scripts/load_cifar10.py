@@ -1,4 +1,3 @@
-"""Load from /home/USER/data/cifar10 or elsewhere; download if missing."""
 
 import tarfile
 import os
@@ -6,8 +5,9 @@ from urllib.request import urlretrieve
 import numpy as np
 
 
-def download_and_save_mnist():
+def download_and_save_cifar10():
     
+    print('Downloading CIFAR10 dataset...')
     url = 'https://www.cs.toronto.edu/~kriz/'
     tar = 'cifar-10-binary.tar.gz'
     files = ['cifar-10-batches-bin/data_batch_1.bin',
@@ -23,7 +23,7 @@ def download_and_save_mnist():
     os.makedirs(path, exist_ok=True)
 
     # Download tarfile if missing
-    if tar not in os.listdir(path):
+    if tar not in os.listdir(path) or True:
         urlretrieve(''.join((url, tar)), os.path.join(path, tar))
         print("Downloaded %s to %s" % (tar, path))
 
@@ -69,5 +69,8 @@ def download_and_save_mnist():
     np.save("data/cifar10_x.npy", images)
     np.save("data/cifar10_y.npy", labels)
     print("Cifar10 saved in data/cifar10_x.npy and data/cifar10_y.npy")
-    
-download_and_save_mnist()
+
+
+
+if __name__ == "__main__":
+    download_and_save_cifar10()
