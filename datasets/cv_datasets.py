@@ -31,6 +31,8 @@ class Cifar10Dataset(BaseDataset):
     def __init__(self, config : dict):
         super().__init__(config)
         print("Loading CIFAR-10 dataset...")
+        if not os.path.exists('data/cifar10_x.npy') or not os.path.exists('data/cifar10_y.npy'):
+            raise FileNotFoundError("CIFAR-10 dataset not found. Please download it by running load_datasets_scripts\load_cifar10.py from the root directory.")
         self.x_data = np.load('data/cifar10_x.npy', allow_pickle=True)
         self.y_data = np.load('data/cifar10_y.npy', allow_pickle=True)
         print("CIFAR-10 dataset loaded.")
