@@ -7,6 +7,7 @@ from datasets.cv_datasets import MNISTDataset, Cifar10Dataset, Cifar100Dataset
 from datasets.AT_and_T_dataset import AT_and_T_Dataset
 from datasets.BA_dataset import BinaryAlphabetDataset
 from datasets.coil20_dataset import Coil20_Dataset
+from datasets.syntethic_dataset import SyntheticDataset
 
 # This maps the name of the dataset to the class of the dataset.
 dataset_name_to_DatasetClass : Dict[str, Type[BaseDataset]] = {
@@ -18,4 +19,5 @@ dataset_name_to_DatasetClass : Dict[str, Type[BaseDataset]] = {
     "att" : AT_and_T_Dataset,
     "ba" : BinaryAlphabetDataset,
     "coil" : Coil20_Dataset,
+    "synth" : SyntheticDataset,
 }
