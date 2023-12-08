@@ -73,7 +73,9 @@ class SyntheticDataset(BaseDataset):
                 raise ValueError(f"Unknown means {means}")
         
         # Create the stds
-        if isinstance(stds, list) and isinstance(stds[0], list): # stds is a list of d-tuple of std
+        if stds is None:
+            stds = np.random.uniform(min_std, max_std, n_clusters)
+        elif isinstance(stds, list) and isinstance(stds[0], list): # stds is a list of d-tuple of std
             stds = np.array(stds)
         elif isinstance(stds, list) and isinstance(stds[0], float): # stds is a list of std
             stds = np.array(stds)

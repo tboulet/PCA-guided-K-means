@@ -14,9 +14,7 @@ class KMeansPlusPlusAlgorithm(BaseInitForKMeansAlgorithm):
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         return labels_to_clustering_result(KMeans(n_clusters=self.config["k"], init="k-means++", n_init=1, max_iter=300).fit_predict(x_data))
-    
-    
-    
+
 class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):
