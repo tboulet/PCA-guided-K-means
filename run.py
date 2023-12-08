@@ -33,9 +33,18 @@ def main():
     do_cli : bool = config["do_cli"]
     
     # Create the algorithm, dataset and metric objects using the classes and the config.
-    algo = AlgoClass(config["algorithms"][algo_name])
-    dataset = DatasetClass(config["datasets"][dataset_name])
+    # Save the sub-configs in the config dict at the same time.
+    algo_config = config["algorithms"][algo_name]
+    config["algo_config"] = algo_config
+    algo = AlgoClass(algo_config)
+    
+    dataset_config = config["datasets"][dataset_name]
+    config["dataset_config"] = dataset_config
+    dataset = DatasetClass(dataset_config)
+    
     metrics = {metric_name : MetricsClass(config["metrics"][metric_name]) for metric_name, MetricsClass in metrics_name_to_MetricsClass.items()}
+    
+    
     
     # Start the WandB run.
     if do_wandb:
