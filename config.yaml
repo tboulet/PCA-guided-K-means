@@ -2,8 +2,6 @@ do_wandb : True
 do_cli : True
 n_iterations : 1000
 
-
-
 algorithms:
   R1:
     K_number_of_clusters : 40
