@@ -10,6 +10,7 @@ class SyntheticDataset(BaseDataset):
         super().__init__(config)
         print(f"Loading synthetic dataset with following parameters: {config}")
         self.x_data, self.y_data = self.generate_data_points(**config)
+        self.x_data = self.x_data.astype(np.float32)
         print(f"Data shape : {self.x_data.shape}")
         print(f"Target shape : {self.y_data.shape}")
         print("Synthetic dataset loaded.")

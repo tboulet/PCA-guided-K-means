@@ -12,7 +12,7 @@ class IrisDataset(BaseDataset):
         print(f"Target shape : {self.dataset.target.shape}")
             
     def get_x_data(self):
-        return self.dataset.data
+        return self.dataset.data.astype(np.float32)
     
     def get_labels(self):
         return self.dataset.target

@@ -24,6 +24,7 @@ class BinaryAlphabetDataset(BaseDataset):
             self.y_data = self.y_data[10 * 39:]
         else:
             pass
+        self.x_data = self.x_data.astype(np.float32)
         print(f"Data shape : {self.x_data.shape}")
         print(f"Target shape : {self.y_data.shape}")
         print("Binary Alphabet dataset loaded.")

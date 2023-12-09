@@ -11,6 +11,7 @@ class Coil20_Dataset(BaseDataset):
         if not os.path.exists('data/coil20_x.npy'):
             raise FileNotFoundError("Coil20 dataset not found. Please download it by running load_datasets_scripts\load_coil20.py from the root directory.")
         self.x_data, self.y_data = np.load('data/coil20_x.npy', allow_pickle=True), np.load('data/coil20_y.npy', allow_pickle=True)
+        self.x_data = self.x_data.astype(np.float32)
         print(f"Data shape : {self.x_data.shape}")
         print(f"Target shape : {self.y_data.shape}")
         print("Coil20 dataset loaded.")

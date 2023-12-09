@@ -36,6 +36,7 @@ class Cifar10Dataset(BaseDataset):
             raise FileNotFoundError("CIFAR-10 dataset not found. Please download it by running load_datasets_scripts\load_cifar10.py from the root directory.")
         self.x_data = np.load('data/cifar10_x.npy', allow_pickle=True)
         self.y_data = np.load('data/cifar10_y.npy', allow_pickle=True)
+        self.x_data = self.x_data.astype(np.float32)
         print("CIFAR-10 dataset loaded.")
         print(f"Data shape : {self.x_data.shape}")
         print(f"Target shape : {self.y_data.shape}")
