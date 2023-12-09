@@ -43,18 +43,19 @@ class KKZ_Algorithm(BaseInitForKMeansAlgorithm):
         norms = np.linalg.norm(x_data, axis=1)
         # extract the first centroid being the maximal norm point
         centroids = [np.argmax(norms)]
+        distances = np.empty((x_data.shape[0], self.config["k"]))
         # extract the other centroids
         for i in range(1, self.config["k"]):
             # compute the distance between each point and the centroids
-            distances = np.linalg.norm(x_data - x_data[centroids][:, np.newaxis], axis=2)
+            distances[:, i-1] = np.linalg.norm(x_data - x_data[centroids[i-1]], axis=1)
             # compute the minimal distance between each point and the centroids
-            min_distances = np.min(distances, axis=1)
+            min_distances = np.min(distances[:, :i], axis=1)
             # compute the argmax of the minimal distances
             centroids.append(np.argmax(min_distances))
         # cluster the data using the centroids
-        distances = np.linalg.norm(x_data - x_data[centroids][:, np.newaxis], axis=2)
-        clustering_result = np.argmin(distances, axis=0)
-        return labels_to_clustering_result(clustering_result)   
+        distances[:, self.config["k"]-1] = np.linalg.norm(x_data - x_data[centroids[self.config["k"]-1]], axis=1)
+        clustering_result = np.argmin(distances, axis=1)
+        return labels_to_clustering_result(clustering_result)
     
 class HAC_Algorithm(BaseInitForKMeansAlgorithm):
     
