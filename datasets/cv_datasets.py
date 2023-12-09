@@ -13,6 +13,7 @@ class MNISTDataset(BaseDataset):
             raise FileNotFoundError("MNIST dataset not found. Please download it by running load_datasets_scripts\load_mnist.py from the root directory.")
         data = np.load('data/mnist_data.npy', allow_pickle=True).item()
         self.x_data, self.y_data = data['images'].to_numpy(), data['labels'].to_numpy()
+        self.x_data = self.x_data.astype(np.float32)
         print(f"Data shape : {self.x_data.shape}")
         print(f"Target shape : {self.y_data.shape}")
         print("MNIST dataset loaded.")

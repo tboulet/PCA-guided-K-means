@@ -1,4 +1,4 @@
-do_wandb : False
+do_wandb : True
 do_cli : True
 n_iterations : 10
 
@@ -11,6 +11,8 @@ algorithms:
   R2:
     K_number_of_clusters : 3
 
+  KMeans++:
+    k : 10
 
 
 datasets:
