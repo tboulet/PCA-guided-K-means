@@ -28,6 +28,7 @@ class RandomR2_Algorithm(BaseInitForKMeansAlgorithm):
         kmeans = KMeans(
             n_clusters=self.config['K_number_of_clusters'], 
             init='random',
+            n_init=1,
             random_state=np.random.randint(1000),
         ).fit(x_data)
         print("RandomR2 finished.")
