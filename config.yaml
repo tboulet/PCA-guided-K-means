@@ -1,6 +1,6 @@
 do_wandb : True
 do_cli : True
-n_iterations : 1000
+n_iterations : 100
 
 
 
