@@ -1,6 +1,7 @@
 from datasets.base_dataset import BaseDataset
 
 from sklearn.datasets import load_iris
+import numpy as np
 
 
 class IrisDataset(BaseDataset):
