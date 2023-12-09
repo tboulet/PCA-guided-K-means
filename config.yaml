@@ -1,18 +1,25 @@
 do_wandb : True
 do_cli : True
-n_iterations : 10
+n_iterations : 1000
 
 
 
 algorithms:
   R1:
-    K_number_of_clusters : 3
+    K_number_of_clusters : 40
 
   R2:
-    K_number_of_clusters : 3
+    K_number_of_clusters : 40
 
   KMeans++:
-    k : 10
+    k : 40
+
+  KKZ:
+    k : 40
+
+  PCA_GuidedSearch:
+    k : 40
+
 
 
 datasets:
