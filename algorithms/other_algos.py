@@ -1,3 +1,4 @@
+from time import sleep
 from typing import Dict, List
 
 import numpy as np
@@ -41,6 +42,7 @@ class KKZ_Algorithm(BaseInitForKMeansAlgorithm):
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         if self.clustering_result is not None:
+            sleep(0.01)
             return self.clustering_result
         # compute the norm of each point
         norms = np.linalg.norm(x_data, axis=1)
@@ -69,6 +71,7 @@ class HAC_Algorithm(BaseInitForKMeansAlgorithm):
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         if self.clustering_result is not None:
+            sleep(0.01)
             return self.clustering_result
         self.clustering_result = labels_to_clustering_result(AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data))
         return self.clustering_result
@@ -81,6 +84,7 @@ class HAC_Kmeans_Algorithm(BaseInitForKMeansAlgorithm):
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         if self.clustering_result is not None:
+            sleep(0.01)
             return self.clustering_result
         # cluster the data using HAC
         labels = AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data)
@@ -128,6 +132,7 @@ class KKZ_Kmeans(BaseInitForKMeansAlgorithm):
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         if self.clustering_result is not None:
+            sleep(0.01)
             return self.clustering_result
         # compute the norm of each point
         norms = np.linalg.norm(x_data, axis=1)
