@@ -4,19 +4,28 @@ n_iterations : 1000
 
 algorithms:
   R1:
-    K_number_of_clusters : 40
+    K_number_of_clusters : 26
 
   R2:
-    K_number_of_clusters : 40
+    K_number_of_clusters : 26
 
   KMeans++:
-    k : 40
+    k : 26
 
   KKZ:
-    k : 40
+    k : 26
 
   PCA_GuidedSearch:
-    k : 40
+    k : 26
+
+  HAC:
+    k : 26
+
+  HAC_Kmeans:
+    k : 26
+  
+  KKZ_Kmeans:
+    k : 26
 
 
 

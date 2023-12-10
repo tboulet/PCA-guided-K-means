@@ -107,3 +107,27 @@ class Normalized_PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
         # cluster the original data using the new cluster centers
         clustering_result = KMeans(n_clusters=self.config["k"], init=cluster_centers, n_init=1, max_iter=300).fit_predict(x_data)
         return labels_to_clustering_result(clustering_result)
+
+class KKZ_Kmeans(BaseInitForKMeansAlgorithm):
+    
+    def __init__(self, config: dict):
+        super().__init__(config)
+        
+    def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
+        # compute the norm of each point
+        norms = np.linalg.norm(x_data, axis=1)
+        # extract the first centroid being the maximal norm point
+        centroids = [np.argmax(norms)]
+        distances = np.empty((x_data.shape[0], self.config["k"]))
+        # extract the other centroids
+        for i in range(1, self.config["k"]):
+            # compute the distance between each point and the centroids
+            distances[:, i-1] = np.linalg.norm(x_data - x_data[centroids[i-1]], axis=1)
+            # compute the minimal distance between each point and the centroids
+            min_distances = np.min(distances[:, :i], axis=1)
+            # compute the argmax of the minimal distances
+            centroids.append(np.argmax(min_distances))
+        # cluster the data using the centroids
+        centroids = x_data[centroids]
+        clustering_result = KMeans(n_clusters=self.config["k"], init=centroids, n_init=1, max_iter=300).fit_predict(x_data)
+        return labels_to_clustering_result(clustering_result)
