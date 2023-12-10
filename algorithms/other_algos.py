@@ -36,9 +36,12 @@ class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
 class KKZ_Algorithm(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):
+        self.clustering_result = None
         super().__init__(config)
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
+        if self.clustering_result is not None:
+            return self.clustering_result
         # compute the norm of each point
         norms = np.linalg.norm(x_data, axis=1)
         # extract the first centroid being the maximal norm point
@@ -60,17 +63,23 @@ class KKZ_Algorithm(BaseInitForKMeansAlgorithm):
 class HAC_Algorithm(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):
+        self.clustering_result = None
         super().__init__(config)
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
+        if self.clustering_result is not None:
+            return self.clustering_result
         return labels_to_clustering_result(AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data))
 
 class HAC_Kmeans_Algorithm(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):
+        self.clustering_result = None
         super().__init__(config)
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
+        if self.clustering_result is not None:
+            return self.clustering_result
         # cluster the data using HAC
         clustering_result = AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data)
         # compute the new cluster centers in the original space
@@ -111,9 +120,12 @@ class Normalized_PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
 class KKZ_Kmeans(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):
+        self.clustering_result = None
         super().__init__(config)
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
+        if self.clustering_result is not None:
+            return self.clustering_result
         # compute the norm of each point
         norms = np.linalg.norm(x_data, axis=1)
         # extract the first centroid being the maximal norm point
