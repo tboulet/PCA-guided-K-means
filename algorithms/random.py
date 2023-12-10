@@ -14,9 +14,17 @@ class RandomR1_Algorithm(BaseInitForKMeansAlgorithm):
         super().__init__(config)
         
     def fit(self, x_data):
-        raise NotImplementedError("RandomR1 is not implemented yet.")
-
-
+        random_assignment = np.random.randint(self.config['K_number_of_clusters'], size=x_data.shape[0])
+        centroids = np.zeros((self.config['K_number_of_clusters'], x_data.shape[1]))
+        for i in range(self.config['K_number_of_clusters']):
+            centroids[i] = np.mean(x_data[random_assignment == i], axis=0)
+        kmeans = KMeans(
+            n_clusters=self.config['K_number_of_clusters'], 
+            init=centroids,
+            n_init=1,
+            max_iter=300,
+        ).fit_predict(x_data)
+        return labels_to_clustering_result(kmeans)
 
 class RandomR2_Algorithm(BaseInitForKMeansAlgorithm):
     
