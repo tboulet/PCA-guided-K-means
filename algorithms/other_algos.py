@@ -57,8 +57,8 @@ class KKZ_Algorithm(BaseInitForKMeansAlgorithm):
             centroids.append(np.argmax(min_distances))
         # cluster the data using the centroids
         distances[:, self.config["k"]-1] = np.linalg.norm(x_data - x_data[centroids[self.config["k"]-1]], axis=1)
-        clustering_result = np.argmin(distances, axis=1)
-        return labels_to_clustering_result(clustering_result)
+        self.clustering_result = np.argmin(distances, axis=1)
+        return labels_to_clustering_result(self.clustering_result)
     
 class HAC_Algorithm(BaseInitForKMeansAlgorithm):
     
@@ -69,8 +69,9 @@ class HAC_Algorithm(BaseInitForKMeansAlgorithm):
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         if self.clustering_result is not None:
             return self.clustering_result
-        return labels_to_clustering_result(AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data))
-
+        self.clustering_result = labels_to_clustering_result(AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data))
+        return self.clustering_result
+    
 class HAC_Kmeans_Algorithm(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):
@@ -81,14 +82,14 @@ class HAC_Kmeans_Algorithm(BaseInitForKMeansAlgorithm):
         if self.clustering_result is not None:
             return self.clustering_result
         # cluster the data using HAC
-        clustering_result = AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data)
+        self.clustering_result = AgglomerativeClustering(n_clusters=self.config["k"], linkage="ward").fit_predict(x_data)
         # compute the new cluster centers in the original space
         cluster_centers = np.zeros((self.config["k"], x_data.shape[1]))
         for i in range(self.config["k"]):
-            cluster_centers[i] = np.mean(x_data[clustering_result == i], axis=0)
+            cluster_centers[i] = np.mean(x_data[self.clustering_result == i], axis=0)
         # cluster the original data using the new cluster centers
-        clustering_result = KMeans(n_clusters=self.config["k"], init=cluster_centers, n_init=1, max_iter=300).fit_predict(x_data)
-        return labels_to_clustering_result(clustering_result)
+        self.clustering_result = KMeans(n_clusters=self.config["k"], init=cluster_centers, n_init=1, max_iter=300).fit_predict(x_data)
+        return labels_to_clustering_result(self.clustering_result)
     
 class KR_Algorithm(BaseInitForKMeansAlgorithm):
     
@@ -141,5 +142,5 @@ class KKZ_Kmeans(BaseInitForKMeansAlgorithm):
             centroids.append(np.argmax(min_distances))
         # cluster the data using the centroids
         centroids = x_data[centroids]
-        clustering_result = KMeans(n_clusters=self.config["k"], init=centroids, n_init=1, max_iter=300).fit_predict(x_data)
-        return labels_to_clustering_result(clustering_result)
+        self.clustering_result = KMeans(n_clusters=self.config["k"], init=centroids, n_init=1, max_iter=300).fit_predict(x_data)
+        return labels_to_clustering_result(self.clustering_result)
