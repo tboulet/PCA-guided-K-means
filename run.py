@@ -3,7 +3,10 @@ from time import time
 from typing import Dict, Type
 import numpy as np
 from tqdm import tqdm
+
+# Logging
 import wandb
+from tensorboardX import SummaryWriter
 
 # Config system
 import hydra
@@ -23,8 +26,9 @@ def main(config : DictConfig):
     algo_name : str = config["algo"]["name"]
     dataset_name : str = config["dataset"]["name"]
     n_iterations : int = config["n_iterations"]
-    do_wandb : bool = config["do_wandb"]
     do_cli : bool = config["do_cli"]
+    do_wandb : bool = config["do_wandb"]
+    do_tb : bool = config["do_tb"]
     do_tqdm : bool = config["do_tqdm"]
     
     # Get the algorithm class and dataset class from the dictionaries.
@@ -38,15 +42,18 @@ def main(config : DictConfig):
 
 
 
-    # Start the WandB run.
+    # Initialize loggers
+    run_name = f"[{algo_name}]_[{dataset_name}]_[{np.random.randint(1000)}]"
+    print(f"Starting run {run_name}")
     if do_wandb:
-        run_name = f"[{algo_name}]_[{dataset_name}]_[{np.random.randint(1000)}]"
         run = wandb.init(
             project=config["wandb_config"]["project"],
             entity=config["wandb_config"]["entity"],
             name=run_name,
             config=config,
             )
+    if do_tb:
+        tb_writer = SummaryWriter(log_dir=f"tensorboard/{run_name}")
 
     # Get the x dataset
     x_data = dataset.get_x_data()
@@ -68,11 +75,15 @@ def main(config : DictConfig):
                 dataset=dataset, 
                 clustering_result=clustering_result,
                 )
-            
             if do_wandb:
                 cumulative_training_time_in_ms = int(cumulative_training_time * 1000)
                 wandb.log(metric_result, step=cumulative_training_time_in_ms)
-                wandb.log({"time_training" : run_time, "iteration" : iteration}, step=cumulative_training_time_in_ms)  # additional logging just in case
+                wandb.log({"time_training" : run_time, "iteration" : iteration}, step=cumulative_training_time_in_ms)
+            if do_tb:
+                for metric_name, metric_result in metric_result.items():
+                    tb_writer.add_scalar(f"metrics/{metric_name}", metric_result, global_step=cumulative_training_time)
+                tb_writer.add_scalar("time_training", run_time, global_step=cumulative_training_time)
+                tb_writer.add_scalar("iteration", iteration, global_step=cumulative_training_time)
             if do_cli:
                 print(f"Metric results at iteration {iteration} for metric {metric_name}: {metric_result}")
 

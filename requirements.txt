@@ -3,6 +3,7 @@ scipy
 matplotlib 
 tqdm
 wandb
+tensorboardX
 pandas
 imageio
 scikit-learn
