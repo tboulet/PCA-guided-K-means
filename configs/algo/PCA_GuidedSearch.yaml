@@ -1,0 +1,3 @@
+name: PCA_GuidedSearch
+config:
+  k : ${dataset.n_classes}

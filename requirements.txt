@@ -8,3 +8,4 @@ imageio
 scikit-learn
 chainer
 opencv-python
+hydra-core

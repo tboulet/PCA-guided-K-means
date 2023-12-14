@@ -1,0 +1,33 @@
+n_iterations : 10
+do_cli : True
+do_tqdm : True
+
+# WandB logging
+do_wandb : True
+wandb_config:
+  project : K-means initialization Benchmark
+  entity : projet13
+
+# Metrics
+metrics:
+  distortion: {}
+
+
+
+
+
+
+# Defaults sub-configs and 
+defaults:
+  - _self_
+  - dataset : iris
+  - algo : R1
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+
+# Hydra config, do not change.
+hydra:
+  output_subdir: null
+  run:
+    dir: .

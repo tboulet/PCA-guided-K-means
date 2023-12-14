@@ -26,6 +26,8 @@ class RandomR1_Algorithm(BaseInitForKMeansAlgorithm):
         ).fit_predict(x_data)
         return labels_to_clustering_result(kmeans)
 
+
+
 class RandomR2_Algorithm(BaseInitForKMeansAlgorithm):
     
     def __init__(self, config: dict):

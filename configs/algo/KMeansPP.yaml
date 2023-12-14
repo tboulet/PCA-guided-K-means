@@ -1,0 +1,3 @@
+name: KMeansPP
+config: 
+  k : ${dataset.n_classes}

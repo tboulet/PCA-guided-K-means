@@ -14,7 +14,6 @@ class DistortionMetric(BaseMetric):
         self.best_distortion = float('inf')
     
     def compute_metrics(self, dataset : BaseDataset, clustering_result : Dict[int, List[int]]) -> Dict[str, float]:
-        print("Computing distortion...")
         distortion = 0
         for cluster_index, cluster_indices in clustering_result.items():
             cluster_center = dataset.get_x_data()[cluster_indices].mean(axis=0)

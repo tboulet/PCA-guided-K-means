@@ -1,0 +1,3 @@
+name: KKZ
+config: 
+  k : ${dataset.n_classes}

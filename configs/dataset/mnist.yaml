@@ -1,0 +1,3 @@
+name: mnist
+config: {}
+n_classes: 10

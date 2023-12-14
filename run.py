@@ -2,46 +2,38 @@ import argparse
 from time import time
 from typing import Dict, Type
 import numpy as np
+from tqdm import tqdm
 import wandb
-import yaml
+
+# Config system
+import hydra
+from omegaconf import OmegaConf, DictConfig
+
 
 from datasets import dataset_name_to_DatasetClass
 from algorithms import algo_name_to_AlgoClass
 from metrics import metrics_name_to_MetricsClass
 
 
-def main():
+@hydra.main(config_path="configs", config_name="config_default.yaml")
+def main(config : DictConfig):
 
-    # Get the algorithm name and dataset name from the command line arguments.
-    parser = argparse.ArgumentParser()
-    parser.add_argument("algo", help="initialization algorithm to use", choices=algo_name_to_AlgoClass.keys())
-    parser.add_argument("dataset", help="dataset to use", choices=dataset_name_to_DatasetClass.keys())
-    args = parser.parse_args()
-    algo_name = args.algo
-    dataset_name = args.dataset
-
+    # Get the config values from the config object.
+    config = OmegaConf.to_container(config, resolve=True)
+    algo_name : str = config["algo"]["name"]
+    dataset_name : str = config["dataset"]["name"]
+    n_iterations : int = config["n_iterations"]
+    do_wandb : bool = config["do_wandb"]
+    do_cli : bool = config["do_cli"]
+    do_tqdm : bool = config["do_tqdm"]
+    
     # Get the algorithm class and dataset class from the dictionaries.
     AlgoClass = algo_name_to_AlgoClass[algo_name]
     DatasetClass = dataset_name_to_DatasetClass[dataset_name]
 
-    # Load the config, merge it with the command line arguments, and get the relevant values.
-    config : dict = yaml.safe_load(open("config.yaml"))
-    n_iterations : int = config["n_iterations"]
-    do_wandb : bool = config["do_wandb"]
-    do_cli : bool = config["do_cli"]
-
     # Create the algorithm, dataset and metric objects using the classes and the config.
-    # Save the sub-configs in the config dict at the same time.
-    algo_config = config["algorithms"][algo_name]
-    config["algo_config"] = algo_config
-    config["algo_name"] = algo_name
-    algo = AlgoClass(algo_config)
-
-    dataset_config = config["datasets"][dataset_name]
-    config["dataset_config"] = dataset_config
-    config["dataset_name"] = dataset_name
-    dataset = DatasetClass(dataset_config)
-
+    algo = AlgoClass(config["algo"]["config"])
+    dataset = DatasetClass(config["dataset"]["config"])
     metrics = {metric_name : MetricsClass(config["metrics"][metric_name]) for metric_name, MetricsClass in metrics_name_to_MetricsClass.items()}
 
 
@@ -50,8 +42,8 @@ def main():
     if do_wandb:
         run_name = f"[{algo_name}]_[{dataset_name}]_[{np.random.randint(1000)}]"
         run = wandb.init(
-            project="K-means initialization Benchmark", 
-            entity="projet13",
+            project=config["wandb_config"]["project"],
+            entity=config["wandb_config"]["entity"],
             name=run_name,
             config=config,
             )
@@ -61,7 +53,9 @@ def main():
 
     # Iterate n_iterations times.
     cumulative_training_time = 0
-    for iteration in range(n_iterations):
+    iterator = range(n_iterations) if not do_tqdm else tqdm(range(n_iterations))
+    
+    for iteration in iterator:
         # Get the clustering result. Measure the time it takes to get the clustering result.
         time_start_training = time()
         clustering_result = algo.fit(x_data=x_data)

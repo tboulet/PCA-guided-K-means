@@ -1,6 +1,8 @@
 # Repo specific ignores
 venv*
 data/
+outputs/
+.hydra/
 wandb/
 personal*
 
