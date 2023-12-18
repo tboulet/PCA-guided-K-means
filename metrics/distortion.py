@@ -1,4 +1,5 @@
 from typing import Dict, List
+from algorithms.base_algorithm import BaseInitForKMeansAlgorithm
 from datasets.base_dataset import BaseDataset
 from metrics.base_metric import BaseMetric
 
@@ -13,7 +14,11 @@ class DistortionMetric(BaseMetric):
         self.config = config
         self.best_distortion = float('inf')
     
-    def compute_metrics(self, dataset : BaseDataset, clustering_result : Dict[int, List[int]]) -> Dict[str, float]:
+    def compute_metrics(self, 
+                        dataset : BaseDataset, 
+                        clustering_result : Dict[int, List[int]],
+                        algo : BaseInitForKMeansAlgorithm,
+                        ) -> Dict[str, float]:
         distortion = 0
         for cluster_index, cluster_indices in clustering_result.items():
             cluster_center = dataset.get_x_data()[cluster_indices].mean(axis=0)

@@ -21,9 +21,14 @@ class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
         x_data_pca_reduced = PCA(n_components=self.config["k"]).fit_transform(x_data)
         
         # Cluster the reduced data using KMeans.
+        n_clusters = self.config["k"]
+        random_assignment_on_pca_subspace = np.random.randint(n_clusters, size=x_data_pca_reduced.shape[0])
+        centroids_on_pca_subspace = np.zeros((n_clusters, x_data_pca_reduced.shape[1]))
+        for i in range(n_clusters):
+            centroids_on_pca_subspace[i] = np.mean(x_data_pca_reduced[random_assignment_on_pca_subspace == i], axis=0)
         kmeans_algo_on_pca_subspace = KMeansAlgorithm(
-            n_clusters=self.config['k'],
-            initial_centroids='random',
+            n_clusters=n_clusters,
+            initial_centroids=centroids_on_pca_subspace,
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )
@@ -35,13 +40,13 @@ class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
             centroids[i] = np.mean(x_data[labels_from_pca_subspace == i], axis=0)
         
         # Cluster the original data using the new cluster centers
-        kmeans_algo = KMeansAlgorithm(
-            n_clusters=self.config['k'],
+        self.kmeans_algo = KMeansAlgorithm(
+            n_clusters=n_clusters,
             initial_centroids=centroids,
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )
-        labels = kmeans_algo.fit_predict(x_data)
+        labels = self.kmeans_algo.fit_predict(x_data)
         return labels_to_clustering_result(labels)
 
 

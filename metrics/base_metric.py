@@ -3,6 +3,7 @@
 
 from abc import ABC, abstractmethod
 from typing import Dict, List
+from algorithms.base_algorithm import BaseInitForKMeansAlgorithm
 
 from datasets.base_dataset import BaseDataset
 
@@ -10,7 +11,11 @@ from datasets.base_dataset import BaseDataset
 class BaseMetric(ABC):
         
     @abstractmethod
-    def compute_metrics(self, dataset : BaseDataset, clustering_result : Dict[int, List[int]]) -> Dict[str, float]:
+    def compute_metrics(self, 
+                        dataset : BaseDataset, 
+                        clustering_result : Dict[int, List[int]],
+                        algo : BaseInitForKMeansAlgorithm,
+                        ) -> Dict[str, float]:
         """Computes the metric for the given clustering result.
 
         Args:

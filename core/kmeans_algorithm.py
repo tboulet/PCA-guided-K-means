@@ -39,7 +39,16 @@ class KMeansAlgorithm:
         self.use_sklearn = use_sklearn
         self.precompute_distances = precompute_distances
         self.distances_data : np.ndarray = None # (n_data, n_data)
-        self.cluster_idx_to_idx_cluster_in_data : np.ndarray = None  # (n_clusters,)
+        self.iteration : int = None
+        
+        assert type(n_clusters) == int and n_clusters > 0, f"Invalid value for n_clusters: {n_clusters}. Must be a positive integer."
+        assert type(initial_centroids) == np.ndarray and initial_centroids.shape[0] == n_clusters, f"Invalid value for initial_centroids: {initial_centroids}. Must be a numpy array of shape (n_clusters, n_features)."
+        assert type(n_init) == int and n_init > 0, f"Invalid value for n_init: {n_init}. Must be a positive integer."
+        assert type(max_iter) == int and max_iter > 0, f"Invalid value for max_iter: {max_iter}. Must be a positive integer."
+        assert type(random_state) == int, f"Invalid value for random_state: {random_state}. Must be an integer."
+        assert type(use_sklearn) == bool, f"Invalid value for use_sklearn: {use_sklearn}. Must be a boolean."
+        assert type(precompute_distances) == bool, f"Invalid value for precompute_distances: {precompute_distances}. Must be a boolean."
+        assert not precompute_distances or centroid_computation_method == "mesoid", f"Pre-computing distance only makes sense in terms of computation optimization if the centroid computation method is 'mesoid'."
         
         # Sklearn implementation, for comparison
         if use_sklearn:
@@ -112,7 +121,8 @@ class KMeansAlgorithm:
         
         # Run the algorithm
         previous_labels = None
-        for t in range(self.max_iter):
+        self.iteration = 0
+        while self.iteration < self.max_iter:
             
             # Assign each data point to the closest centroid
             distances_to_centroids = np.zeros((self.n_clusters, n_data))
@@ -137,7 +147,10 @@ class KMeansAlgorithm:
                     centroids[cluster_idx] = x_data[np.random.choice(n_data, size=1, replace=False)]
                 else:
                     centroids[cluster_idx] = self.centroid_function(x_data = x_data, indexes_in_cluster = indexes_in_cluster)
-                
+            
+            # Increment the iteration
+            self.iteration += 1
+            
         return labels
 
     
@@ -152,17 +165,15 @@ class KMeansAlgorithm:
             np.ndarray: the mesoid, of shape (n_features,)
         """
 
-        best_inertia = np.inf
-        best_idx_data_point = None
-        # We iterate on the data points in the cluster
-        for idx_mesoid_candidate in indexes_in_cluster:
-            # We compute the inertia of the cluster if the mesoid was the current data point
-            if self.precompute_distances:
-                inertia_candidate = np.sum([
-                    self.distances_data[idx_mesoid_candidate, idx_data_point_2] 
-                    for idx_data_point_2 in indexes_in_cluster
-                ])
-            else:
+        if self.precompute_distances:
+            return x_data[indexes_in_cluster[np.argmin(np.sum(self.distances_data[indexes_in_cluster][:, indexes_in_cluster], axis=1))]]
+
+        else:
+            best_inertia = np.inf
+            best_idx_data_point = None
+            # We iterate on the data points in the cluster
+            for idx_mesoid_candidate in indexes_in_cluster:
+                # We compute the inertia of the cluster if the mesoid was the current data point
                 mesoid_candidate = x_data[idx_mesoid_candidate]
                 inertia_candidate = np.sum([
                     self.distance_function(
@@ -170,11 +181,11 @@ class KMeansAlgorithm:
                         data_point_2 = x_data[idx_data_point_2]) 
                     for idx_data_point_2 in indexes_in_cluster
                     ])
-            # We update the index of the best mesoid if needed
-            if inertia_candidate < best_inertia:
-                best_inertia = inertia_candidate
-                best_idx_data_point = idx_mesoid_candidate
-        # We return the best mesoid
-        assert best_idx_data_point is not None, "No best mesoid was found. This should not happen."
-        return x_data[best_idx_data_point]
+                # We update the index of the best mesoid if needed
+                if inertia_candidate < best_inertia:
+                    best_inertia = inertia_candidate
+                    best_idx_data_point = idx_mesoid_candidate
+            # We return the best mesoid
+            assert best_idx_data_point is not None, "No best mesoid was found. This should not happen."
+            return x_data[best_idx_data_point]
     

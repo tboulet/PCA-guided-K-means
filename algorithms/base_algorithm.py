@@ -3,6 +3,8 @@ from typing import Dict, List
 
 import numpy as np
 
+from core.kmeans_algorithm import KMeansAlgorithm
+
 
 
 class BaseInitForKMeansAlgorithm(ABC):
@@ -10,6 +12,7 @@ class BaseInitForKMeansAlgorithm(ABC):
     def __init__(self, config : dict, kmeans_config : dict):
         self.config = config
         self.kmeans_config = kmeans_config
+        self.kmeans_algo : KMeansAlgorithm = None
         
     @abstractmethod
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:

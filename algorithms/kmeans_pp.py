@@ -17,11 +17,12 @@ class KMeansPlusPlusAlgorithm(BaseInitForKMeansAlgorithm):
         super().__init__(config, kmeans_config)
                 
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
-        kmeans_algo = KMeansAlgorithm(
+        raise NotImplementedError("KMeansPlusPlusAlgorithm.fit() is not implemented.")
+        self.kmeans_algo = KMeansAlgorithm(
             n_clusters=self.config['k'],
             initial_centroids='k-means++',
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )
-        labels = kmeans_algo.fit_predict(x_data)
+        labels = self.kmeans_algo.fit_predict(x_data)
         return labels_to_clustering_result(labels)   
