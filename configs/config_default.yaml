@@ -12,6 +12,7 @@ do_tb : True
 # Metrics
 metrics:
   distortion: {}
+  number_of_iterations: {}
 
 # K-means algorithm
 kmeans_config:

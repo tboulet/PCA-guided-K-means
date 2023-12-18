@@ -19,6 +19,7 @@ class NumberOfIterationsForConvergenceMetric(BaseMetric):
         if self.has_failed:
             return {}
         try:
+            assert type(algo.kmeans_algo.iteration) == int
             return {"number_of_iterations_for_convergence" : algo.kmeans_algo.iteration}
         except:
             self.has_failed = True

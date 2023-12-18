@@ -1,4 +1,5 @@
 import argparse
+import datetime
 from time import time
 from typing import Dict, Type
 import numpy as np
@@ -43,7 +44,7 @@ def main(config : DictConfig):
 
 
     # Initialize loggers
-    run_name = f"[{algo_name}]_[{dataset_name}]_[{np.random.randint(1000)}]"
+    run_name = f"[{algo_name}]_[{dataset_name}]_{datetime.datetime.now().strftime('%dth%mmo_%Hh%Mmin%Ss')}_seed{np.random.randint(1000)}"
     print(f"Starting run {run_name}")
     if do_wandb:
         run = wandb.init(
@@ -74,6 +75,7 @@ def main(config : DictConfig):
             metric_result = metric.compute_metrics(
                 dataset=dataset, 
                 clustering_result=clustering_result,
+                algo=algo,
                 )
             if do_wandb:
                 cumulative_training_time_in_ms = int(cumulative_training_time * 1000)
