@@ -21,7 +21,7 @@ kmeans_config:
   max_iter : 300
   distance_computation_method : L2
   centroid_computation_method : mean
-  precompute_distances : True
+  precompute_distances : False
 
 
 # Defaults sub-configs and 
