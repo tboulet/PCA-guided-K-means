@@ -1,3 +1,4 @@
 name: HAC
 config: 
   k : ${dataset.n_classes}
+  compute_only_once : True

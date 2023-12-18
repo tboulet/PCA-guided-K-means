@@ -13,7 +13,11 @@ do_tb : True
 metrics:
   distortion: {}
 
-
+# K-means algorithm
+kmeans_config:
+  use_sklearn : True
+  n_init : 1
+  max_iter : 300
 
 
 

@@ -36,7 +36,7 @@ def main(config : DictConfig):
     DatasetClass = dataset_name_to_DatasetClass[dataset_name]
 
     # Create the algorithm, dataset and metric objects using the classes and the config.
-    algo = AlgoClass(config["algo"]["config"])
+    algo = AlgoClass(config = config["algo"]["config"], kmeans_config = config["kmeans_config"])
     dataset = DatasetClass(config["dataset"]["config"])
     metrics = {metric_name : MetricsClass(config["metrics"][metric_name]) for metric_name, MetricsClass in metrics_name_to_MetricsClass.items()}
 

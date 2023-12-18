@@ -7,8 +7,9 @@ import numpy as np
 
 class BaseInitForKMeansAlgorithm(ABC):
     """An interface for any initialization algorithm method for k-means."""
-    def __init__(self, config : dict):
+    def __init__(self, config : dict, kmeans_config : dict):
         self.config = config
+        self.kmeans_config = kmeans_config
         
     @abstractmethod
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
