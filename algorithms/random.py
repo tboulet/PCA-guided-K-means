@@ -21,7 +21,7 @@ class RandomR1_Algorithm(BaseInitForKMeansAlgorithm):
             centroids[i] = np.mean(x_data[random_assignment == i], axis=0)
         kmeans_algo = KMeansAlgorithm(
             n_clusters=self.config['K_number_of_clusters'],
-            init=centroids,
+            initial_centroids=centroids,
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )
@@ -36,9 +36,10 @@ class RandomR2_Algorithm(BaseInitForKMeansAlgorithm):
         super().__init__(config, kmeans_config)
         
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
+        centroids = x_data[np.random.choice(x_data.shape[0], self.config['K_number_of_clusters'], replace=False)]
         kmeans_algo = KMeansAlgorithm(
             n_clusters=self.config['K_number_of_clusters'],
-            init='random',
+            initial_centroids=centroids,
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )

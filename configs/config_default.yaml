@@ -1,4 +1,4 @@
-n_iterations : 10
+n_iterations : 1000
 do_cli : True
 do_tqdm : True
 
@@ -15,11 +15,12 @@ metrics:
 
 # K-means algorithm
 kmeans_config:
-  use_sklearn : True
+  use_sklearn : False
   n_init : 1
   max_iter : 300
-
-
+  distance_computation_method : L2
+  centroid_computation_method : mean
+  precompute_distances : True
 
 
 # Defaults sub-configs and 

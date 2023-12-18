@@ -23,7 +23,7 @@ class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
         # Cluster the reduced data using KMeans.
         kmeans_algo_on_pca_subspace = KMeansAlgorithm(
             n_clusters=self.config['k'],
-            init='random',
+            initial_centroids='random',
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )
@@ -37,7 +37,7 @@ class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
         # Cluster the original data using the new cluster centers
         kmeans_algo = KMeansAlgorithm(
             n_clusters=self.config['k'],
-            init=centroids,
+            initial_centroids=centroids,
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )

@@ -19,7 +19,7 @@ class KMeansPlusPlusAlgorithm(BaseInitForKMeansAlgorithm):
     def fit(self, x_data : np.ndarray) -> Dict[int, List[int]]:
         kmeans_algo = KMeansAlgorithm(
             n_clusters=self.config['k'],
-            init='k-means++',
+            initial_centroids='k-means++',
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )

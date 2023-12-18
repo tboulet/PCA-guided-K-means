@@ -47,7 +47,7 @@ class HAC_Algorithm(BaseInitForKMeansAlgorithm):
         # Cluster the original data using the centroids computed by KKZ
         kmeans_algo = KMeansAlgorithm(
             n_clusters=self.config['k'],
-            init=centroids,
+            initial_centroids=centroids,
             random_state=np.random.randint(1000),
             **self.kmeans_config,
         )
