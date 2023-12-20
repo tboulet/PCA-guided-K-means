@@ -1,0 +1,15 @@
+# Config for visualization of the dataset.
+method : tsne   # tsne, pca or lda
+
+# Defaults sub-configs and 
+defaults:
+  - _self_
+  - dataset : iris
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+# Hydra config, do not change.
+hydra:
+  output_subdir: null
+  run:
+    dir: .
