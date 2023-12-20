@@ -26,11 +26,12 @@ class KMeansPlusPlusAlgorithm(BaseInitForKMeansAlgorithm):
         
         for cluster_idx in range(1, n_clusters):
             # For each point, compute the distance to the nearest centroid
-            distances_to_centroids = np.array([np.min(np.linalg.norm(x_data - c, axis=1)) for c in centroids])  # (n_centroids,)
+            distances_to_centroids = np.array([[np.linalg.norm(point - centroid) for centroid in centroids] for point in x_data])  # (n_data, n_clusters)
+            min_distances_to_centroids = distances_to_centroids.min(axis=1)  # (n_data,)
+            probabilities = min_distances_to_centroids / min_distances_to_centroids.sum()
             
-            # Pick the point with the largest distance to the nearest centroid as the next centroid
-            next_centroid_idx = np.argmax(distances_to_centroids)
-            next_centroid = x_data[next_centroid_idx]
+            # Pick the point stochastically with probability pr oportional to the distance to the nearest centroid
+            next_centroid = x_data[np.random.choice(n_data, p=probabilities)]
             centroids.append(next_centroid)
             
         centroids = np.array(centroids)
