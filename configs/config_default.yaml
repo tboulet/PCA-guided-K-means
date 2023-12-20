@@ -1,13 +1,19 @@
 n_iterations : 1000
-do_cli : True
 do_tqdm : True
 
-# WandB logging
+# Logging
 do_wandb : True
 wandb_config:
   project : K-means initialization Benchmark
   entity : projet13
 do_tb : True
+do_cli : True
+to_log_in_csv:
+  - distortion
+  - number_of_iterations_for_convergence
+  - iteration
+  - number_of_iterations
+  - time_training
 
 # Metrics
 metrics:

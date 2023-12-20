@@ -1,8 +1,10 @@
 import argparse
 import datetime
+import os
 from time import time
-from typing import Dict, Type
+from typing import Dict, List, Type
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 
 # Logging
@@ -55,7 +57,12 @@ def main(config : DictConfig):
             )
     if do_tb:
         tb_writer = SummaryWriter(log_dir=f"tensorboard/{run_name}")
-
+    to_log_in_csv : List[str] = config["to_log_in_csv"]
+    do_csv = len(to_log_in_csv) > 0
+    if do_csv:
+        metrics_df = pd.DataFrame(columns=to_log_in_csv)
+        
+        
     # Get the x dataset
     x_data = dataset.get_x_data()
 
@@ -69,25 +76,33 @@ def main(config : DictConfig):
         clustering_result = algo.fit(x_data=x_data)
         run_time = time() - time_start_training
         cumulative_training_time += run_time
-
+        cumulative_training_time_in_ms = int(cumulative_training_time * 1000)
+        
         # Log metrics.
+        metrics_dict = {"time_training" : run_time, "iteration" : iteration}
         for metric_name, metric in metrics.items():
-            metric_result = metric.compute_metrics(
+            metrics_dict.update(metric.compute_metrics(
                 dataset=dataset, 
                 clustering_result=clustering_result,
                 algo=algo,
-                )
-            if do_wandb:
-                cumulative_training_time_in_ms = int(cumulative_training_time * 1000)
-                wandb.log(metric_result, step=cumulative_training_time_in_ms)
-                wandb.log({"time_training" : run_time, "iteration" : iteration}, step=cumulative_training_time_in_ms)
-            if do_tb:
-                for metric_name, metric_result in metric_result.items():
-                    tb_writer.add_scalar(f"metrics/{metric_name}", metric_result, global_step=cumulative_training_time)
-                tb_writer.add_scalar("time_training", run_time, global_step=cumulative_training_time)
-                tb_writer.add_scalar("iteration", iteration, global_step=cumulative_training_time)
-            if do_cli:
-                print(f"Metric results at iteration {iteration} for metric {metric_name}: {metric_result}")
+                ))
+        if do_wandb:
+            wandb.log(metrics_dict, step=cumulative_training_time_in_ms)
+        if do_tb:
+            for metric_name, metric_value in metrics_dict.items():
+                tb_writer.add_scalar(f"metrics/{metric_name}", metric_value, global_step=cumulative_training_time)
+        if do_csv:
+            metrics_dict_csv = {metric_name : None for metric_name in to_log_in_csv}
+            for metric_name, metric_value in metrics_dict.items():
+                if metric_name in metrics_dict_csv:
+                    metrics_dict_csv[metric_name] = metric_value
+            metrics_df = pd.concat([metrics_df, pd.DataFrame(data=metrics_dict_csv, columns=to_log_in_csv, index=[iteration])])
+            dir_to_save_csv = os.path.join("logs", run_name, "metrics.csv")
+            os.makedirs(os.path.dirname(dir_to_save_csv), exist_ok=True)
+            metrics_df.to_csv(dir_to_save_csv)
+                            
+        if do_cli:
+            print(f"Metric results at iteration {iteration} for metric {metric_name}: {metrics_dict}")
 
     # Finish the WandB run.
     if do_wandb:
