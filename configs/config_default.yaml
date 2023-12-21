@@ -14,11 +14,19 @@ to_log_in_csv:
   - iteration
   - number_of_iterations
   - time_training
+  - silhouette
+  - calinski_harabasz
+  - davies_bouldin
+  # - confusion
 
 # Metrics
 metrics:
   distortion: {}
   number_of_iterations: {}
+  silhouette: {}
+  # confusion: {}
+  calinski_harabasz: {}
+  davies_bouldin: {}
 
 # K-means algorithm
 kmeans_config:
@@ -33,7 +41,7 @@ kmeans_config:
 # Defaults sub-configs and 
 defaults:
   - _self_
-  - dataset : iris
+  - dataset : ba
   - algo : R1
   - override hydra/hydra_logging: disabled  
   - override hydra/job_logging: disabled 
