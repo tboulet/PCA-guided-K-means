@@ -25,7 +25,7 @@ class SyntheticDataset(BaseDataset):
             stds : Union[List[List[float]], List[float], float] = .1,
             min_std : float = .1,
             max_std : float = .5,
-            overlapping : bool = True,
+            overlapping : str = 'none', # none, ellipsoidal, non_gaussian_laplace, non_gaussian_uniform, nested, bridging
             pre_visualization : bool = False,
             ) -> Tuple[np.ndarray, np.ndarray]:
         """Generate synthetic data points. The data points are generated from a mixture of gaussians.
@@ -82,13 +82,81 @@ class SyntheticDataset(BaseDataset):
             stds = np.array(stds)
         else: # stds is a float
             stds = np.ones(n_clusters) * stds
-        
-        # Create the data points
-        for i in range(n_samples):
-            cluster = np.random.choice(n_clusters, p=proportion)
-            x_data[i] = np.random.normal(means[cluster], stds[cluster])
-            y_data[i] = cluster
-         
+
+        # Handle different overlapping types
+        if overlapping == 'ellipsoidal':
+            # Code for rotated ellipsoidal clusters
+            for i in range(n_samples):
+                cluster = np.random.choice(n_clusters, p=proportion)
+                if isinstance(stds[cluster], float):
+                    cov_matrix = np.eye(dimension) * stds[cluster]
+                else:
+                    cov_matrix = np.diag(stds[cluster])
+                x_data[i] = np.random.multivariate_normal(means[cluster], cov_matrix)
+                y_data[i] = cluster
+
+        elif overlapping == 'non_gaussian_laplace':
+            # Code for Laplace
+            for i in range(n_samples):
+                cluster = np.random.choice(n_clusters, p=proportion)
+                x_data[i] = np.random.laplace(means[cluster], stds[cluster])
+                y_data[i] = cluster
+
+        elif overlapping == 'non_gaussian_uniform':
+            # Code for uniform on a ball
+            for i in range(n_samples):
+                cluster = np.random.choice(n_clusters, p=proportion)
+                x_data[i] = np.random.uniform(means[cluster] - stds[cluster], means[cluster] + stds[cluster])
+                y_data[i] = cluster
+
+        elif overlapping == 'nested':
+            # Code for nested clusters
+            for i in range(n_samples):
+                main_cluster = np.random.choice(n_clusters, p=proportion)
+                # Determine if this point belongs to the main cluster or a sub-cluster
+                if np.random.rand() < 0.5:  # 50% chance to belong to the main cluster
+                    x_data[i] = np.random.normal(means[main_cluster], stds[main_cluster])
+                else:  # Belongs to a sub-cluster
+                    # Sub-cluster parameters: slightly offset mean and reduced std
+                    sub_cluster_mean = means[main_cluster] + np.random.normal(scale=0.1, size=dimension)
+                    sub_cluster_std = stds[main_cluster] * 0.5  # Smaller std for sub-cluster
+                    x_data[i] = np.random.normal(sub_cluster_mean, sub_cluster_std)
+                y_data[i] = main_cluster
+
+        elif overlapping == 'bridging':
+            # Assuming two clusters to bridge for simplicity; can be extended for more
+            assert n_clusters >= 2, "Cluster bridging requires at least two clusters"
+
+            # Split the dataset into three parts: two clusters and one bridge
+            n_cluster_samples = int(n_samples * 0.8) // 2  # 40% of data in each cluster
+            n_bridge_samples = n_samples - 2 * n_cluster_samples  # 20% of data in the bridge
+
+            # Generate two main clusters
+            for i in range(2):
+                cluster_indices = range(i * n_cluster_samples, (i + 1) * n_cluster_samples)
+                cluster_mean = means[i] if isinstance(means, list) else np.random.normal(size=(dimension,))
+                cluster_std = stds[i] if isinstance(stds, list) else stds
+                x_data[cluster_indices] = np.random.normal(cluster_mean, cluster_std, (n_cluster_samples, dimension))
+                y_data[cluster_indices] = i
+
+            # Generate the bridging points
+            bridge_indices = range(2 * n_cluster_samples, 2 * n_cluster_samples + n_bridge_samples)
+            for i, index in enumerate(bridge_indices):
+                # Interpolate between the means of the first two clusters
+                ratio = i / n_bridge_samples
+                bridge_point = ratio * means[0] + (1 - ratio) * means[1]
+                bridge_std = min(stds) * 0.5  # Smaller std for bridge points
+                x_data[index] = np.random.normal(bridge_point, bridge_std)
+                y_data[index] = -1  # Special label for bridge points
+
+        else:
+            # Add check that it's 'none' and not something else
+            # Default behavior for no specific overlap
+            for i in range(n_samples):
+                cluster = np.random.choice(n_clusters, p=proportion)
+                x_data[i] = np.random.normal(means[cluster], stds[cluster])
+                y_data[i] = cluster
+            
         # Plot the data points
         if pre_visualization and dimension == 2:
             import matplotlib.pyplot as plt
