@@ -20,11 +20,7 @@ to_log_in_csv:
   # - confusion
 
 # Metrics
-metrics:
-  distortion: {}
-  silhouette: {}
-  calinski_harabasz: {}
-  davies_bouldin: {}
+metrics: all
   # number_of_iterations: {}
   # confusion: {}
 
