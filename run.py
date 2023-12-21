@@ -33,6 +33,7 @@ def main(config : DictConfig):
     do_wandb : bool = config["do_wandb"]
     do_tb : bool = config["do_tb"]
     do_tqdm : bool = config["do_tqdm"]
+    metrics_names : List[str] = config["metrics"].keys()
     
     # Get the algorithm class and dataset class from the dictionaries.
     AlgoClass = algo_name_to_AlgoClass[algo_name]
@@ -41,7 +42,8 @@ def main(config : DictConfig):
     # Create the algorithm, dataset and metric objects using the classes and the config.
     algo = AlgoClass(config = config["algo"]["config"], kmeans_config = config["kmeans_config"])
     dataset = DatasetClass(config["dataset"]["config"])
-    metrics = {metric_name : MetricsClass(config["metrics"][metric_name]) for metric_name, MetricsClass in metrics_name_to_MetricsClass.items()}
+
+    metrics = {metric_name : metrics_name_to_MetricsClass[metric_name](config["metrics"][metric_name]) for metric_name in metrics_names}
 
 
 
