@@ -3,12 +3,28 @@ config:
   seed : null
   n_samples : 300
   dimension : 2
-  n_clusters : 3
-  proportion : [0.1, 0.2, 0.7]  # random, uniform, or list of proportions
-  overlapping : 'none' # none, ellipsoidal, non_gaussian_laplace, non_gaussian_uniform, nested, bridging
-  means : [[0,1], [1,0], [1,1]]             # 'random' which means sampled from N(0,I_d), or list of means
-  stds : [[0.1,0.1], [0.1,0.1], [0.1,0.1]]  # 'random' which means sampled from U(min_std, max_std), or list of stds
+  n_clusters : 5
+  proportion : 'random' # random, uniform, or list of proportions
+  overlapping : 'bridging' # none, ellipsoidal, non_gaussian_laplace, non_gaussian_uniform, nested, bridging
+  means : 'random'             # 'random' which means sampled from N(0,I_d), or list of means
+  stds :   # 'random' which means sampled from U(min_std, max_std), or list of stds
   min_std : 0.1
-  max_std : 0.3
+  max_std : 0.25
   pre_visualization : True
 n_classes: ${dataset.config.n_clusters}
+
+
+# name: synth
+# config:
+#   seed : null
+#   n_samples : 300
+#   dimension : 2
+#   n_clusters : 3
+#   proportion : [0.1, 0.2, 0.7]  # random, uniform, or list of proportions
+#   overlapping : 'nested' # none, ellipsoidal, non_gaussian_laplace, non_gaussian_uniform, nested, bridging
+#   means : [[0,1], [1,0], [1,1]]             # 'random' which means sampled from N(0,I_d), or list of means
+#   stds : [[0.1,0.1], [0.1,0.1], [0.1,0.1]]  # 'random' which means sampled from U(min_std, max_std), or list of stds
+#   min_std : 0.1
+#   max_std : 0.3
+#   pre_visualization : True
+# n_classes: ${dataset.config.n_clusters}

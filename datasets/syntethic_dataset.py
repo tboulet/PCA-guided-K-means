@@ -134,8 +134,17 @@ class SyntheticDataset(BaseDataset):
             # Generate two main clusters
             for i in range(2):
                 cluster_indices = range(i * n_cluster_samples, (i + 1) * n_cluster_samples)
-                cluster_mean = means[i] if isinstance(means, list) else np.random.normal(size=(dimension,))
-                cluster_std = stds[i] if isinstance(stds, list) else stds
+                cluster_mean = means[i] #if isinstance(means, list) else np.random.normal(size=(dimension,))
+                print(cluster_mean)
+                # cluster_std = stds[i] if isinstance(stds, list) else stds
+
+                if isinstance(stds, np.ndarray) and stds.ndim == 2:  # stds is a list of lists
+                    cluster_std = stds[i]
+                elif isinstance(stds, np.ndarray) and stds.ndim == 1:  # stds is a list of floats
+                    cluster_std = stds[i]
+                else:  # stds is a single float
+                    cluster_std = stds
+
                 x_data[cluster_indices] = np.random.normal(cluster_mean, cluster_std, (n_cluster_samples, dimension))
                 y_data[cluster_indices] = i
 
@@ -144,7 +153,8 @@ class SyntheticDataset(BaseDataset):
             for i, index in enumerate(bridge_indices):
                 # Interpolate between the means of the first two clusters
                 ratio = i / n_bridge_samples
-                bridge_point = ratio * means[0] + (1 - ratio) * means[1]
+                print(means[0], means[1])
+                bridge_point = ratio * means[1] + (1 - ratio) * means[0]
                 bridge_std = min(stds) * 0.5  # Smaller std for bridge points
                 x_data[index] = np.random.normal(bridge_point, bridge_std)
                 y_data[index] = -1  # Special label for bridge points
