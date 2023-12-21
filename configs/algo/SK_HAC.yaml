@@ -1,0 +1,3 @@
+name: SK_HAC
+config: 
+  k : ${dataset.n_classes}
