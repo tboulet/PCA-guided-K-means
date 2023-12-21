@@ -26,6 +26,7 @@ class PCA_GuidedSearchAlgorithm(BaseInitForKMeansAlgorithm):
         centroids_on_pca_subspace = np.zeros((n_clusters, x_data_pca_reduced.shape[1]))
         for i in range(n_clusters):
             centroids_on_pca_subspace[i] = np.mean(x_data_pca_reduced[random_assignment_on_pca_subspace == i], axis=0)
+
         kmeans_algo_on_pca_subspace = KMeansAlgorithm(
             n_clusters=n_clusters,
             initial_centroids=centroids_on_pca_subspace,

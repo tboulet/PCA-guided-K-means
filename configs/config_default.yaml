@@ -1,8 +1,8 @@
-n_iterations : 1000
+n_iterations : 10
 do_tqdm : True
 
 # Logging
-do_wandb : True
+do_wandb : False
 wandb_config:
   project : K-means initialization Benchmark
   entity : projet13
@@ -34,7 +34,7 @@ kmeans_config:
 defaults:
   - _self_
   - dataset : iris
-  - algo : R1
+  - algo : SK_PCA_GuidedSearch
   - override hydra/hydra_logging: disabled  
   - override hydra/job_logging: disabled 
 
