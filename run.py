@@ -21,6 +21,7 @@ from algorithms import algo_name_to_AlgoClass
 from metrics import metrics_name_to_MetricsClass
 
 
+
 @hydra.main(config_path="configs", config_name="config_default.yaml")
 def main(config : DictConfig):
 
@@ -33,7 +34,7 @@ def main(config : DictConfig):
     do_wandb : bool = config["do_wandb"]
     do_tb : bool = config["do_tb"]
     do_tqdm : bool = config["do_tqdm"]
-    metrics_names : List[str] = config["metrics"].keys()
+    metric_type : str = config["metrics"]
     
     # Get the algorithm class and dataset class from the dictionaries.
     AlgoClass = algo_name_to_AlgoClass[algo_name]
@@ -43,7 +44,21 @@ def main(config : DictConfig):
     algo = AlgoClass(config = config["algo"]["config"], kmeans_config = config["kmeans_config"])
     dataset = DatasetClass(config["dataset"]["config"])
 
-    metrics = {metric_name : metrics_name_to_MetricsClass[metric_name](config["metrics"][metric_name]) for metric_name in metrics_names}
+    print(metric_type)
+    if metric_type == "all":
+        print("getting all metrics")
+        metrics = {
+            "distortion": metrics_name_to_MetricsClass["distortion"]({}),
+            "silhouette": metrics_name_to_MetricsClass["silhouette"]({}),
+            "davies_bouldin": metrics_name_to_MetricsClass["davies_bouldin"]({}),
+            "calinski_harabasz": metrics_name_to_MetricsClass["calinski_harabasz"]({}),
+        }
+        to_log_in_csv = ["time_training", "iteration", "distortion", "silhouette", "davies_bouldin", "calinski_harabasz"]
+    else:
+        metrics = {
+            "distortion": metrics_name_to_MetricsClass["distortion"]({}),
+        }
+        to_log_in_csv = ["time_training", "iteration", "distortion"]
 
 
 
@@ -59,7 +74,6 @@ def main(config : DictConfig):
             )
     if do_tb:
         tb_writer = SummaryWriter(log_dir=f"tensorboard/{run_name}")
-    to_log_in_csv : List[str] = config["to_log_in_csv"]
     do_csv = len(to_log_in_csv) > 0
     if do_csv:
         metrics_df = pd.DataFrame(columns=to_log_in_csv)
