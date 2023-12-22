@@ -5,7 +5,7 @@ from metrics.base_metric import BaseMetric
 
 
 class NumberOfIterationsForConvergenceMetric(BaseMetric):
-    """Computes the number of iterations for convergence of the algorithm.
+    """Computes the number of iterations required for the KMeans algorithm to converge.
     """
     def __init__(self, config : dict):
         self.config = config
