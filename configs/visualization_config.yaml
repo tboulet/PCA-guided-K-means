@@ -1,7 +1,7 @@
 # Config for visualization of the dataset.
 method : tsne   # tsne, pca or lda
 
-# Defaults sub-configs and 
+# Defaults sub-configs
 defaults:
   - _self_
   - dataset : iris

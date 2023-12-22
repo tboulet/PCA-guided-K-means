@@ -1,0 +1,14 @@
+name: synth
+config:
+  seed : null
+  n_samples : 1000
+  dimension : 200
+  n_clusters : 10
+  proportion : 'random' # random, uniform, or list of proportions
+  overlapping : 'non_gaussian_uniform' # none, ellipsoidal, non_gaussian_laplace, non_gaussian_uniform, nested, bridging
+  means : 'random'             # 'random' which means sampled from N(0,I_d), or list of means
+  stds :   # 'random' which means sampled from U(min_std, max_std), or list of stds
+  min_std : 0.13
+  max_std : 0.15
+  pre_visualization : True
+n_classes: ${dataset.config.n_clusters}
