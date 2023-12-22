@@ -6,7 +6,6 @@ from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-
 # Config system
 import hydra
 from omegaconf import OmegaConf, DictConfig
