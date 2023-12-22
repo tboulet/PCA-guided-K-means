@@ -2,7 +2,7 @@ import os
 from typing import List, Tuple, Union
 import numpy as np
 from datasets.base_dataset import BaseDataset
-
+from scipy.stats import special_ortho_group
 
 class SyntheticDataset(BaseDataset):
     
@@ -92,6 +92,10 @@ class SyntheticDataset(BaseDataset):
                     cov_matrix = np.eye(dimension) * stds[cluster]
                 else:
                     cov_matrix = np.diag(stds[cluster])
+
+                rotation_matrix = special_ortho_group.rvs(dim=dimension)
+                cov_matrix = rotation_matrix @ cov_matrix @ rotation_matrix.T
+                
                 x_data[i] = np.random.multivariate_normal(means[cluster], cov_matrix)
                 y_data[i] = cluster
 
