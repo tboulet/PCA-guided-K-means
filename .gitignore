@@ -7,7 +7,7 @@ logs/
 wandb/
 tensorboard/
 personal*
-
+*.bat
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
