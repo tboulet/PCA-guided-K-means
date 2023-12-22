@@ -1,4 +1,4 @@
-name: nested
+name: synth
 config:
   seed : null
   n_samples : 1000

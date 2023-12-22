@@ -1,5 +1,5 @@
 # For large Gaussians (10 clusters and 1000 clusters)
-name: gauss2
+name: synth
 config:
   seed : null
   n_samples : 10000
