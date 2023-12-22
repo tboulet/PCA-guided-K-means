@@ -1,0 +1,16 @@
+# For large Gaussians (10 clusters and 1000 clusters)
+name: gauss2
+config:
+  seed : null
+  n_samples : 10000
+  dimension : 500
+  n_clusters : 1000
+  proportion : 'random' # random, uniform, or list of proportions
+  overlapping : 'none' # none, ellipsoidal, non_gaussian_laplace, non_gaussian_uniform, nested, bridging
+  means : 'random'             # 'random' which means sampled from N(0,I_d), or list of means
+  stds :   # 'random' which means sampled from U(min_std, max_std), or list of stds
+  min_std : 0.084
+  max_std : 0.094
+  pre_visualization : True
+n_classes: ${dataset.config.n_clusters}
+
